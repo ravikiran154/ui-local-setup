@@ -1,6 +1,9 @@
-# ui-local-setup
+# ui-local-setup(requires Gcloud access)
+
+gcloud auth configure-docker
 
 Install docker and docker-compose
+
 
 
 Follow below steps before launching
