@@ -1,0 +1,52 @@
+version: '3'
+services: 
+  docker-mysql:
+   container_name: mysql
+   image: mysql:5.7.20
+   environment:
+     - MYSQL_ROOT_PASSWORD=root
+     - MYSQL_DATABASE=osdashboard
+     - MYSQL_PASSWORD=root
+     - MYSQL_PORT=3306
+   ports:
+      - "3306:3306"
+   expose:
+      - "3306"
+   volumes:
+      - mysql-data:/var/lib/mysql
+      - ./dumps/osdashboard.sql:/docker-entrypoint-initdb.d/osdashboard.sql
+   command: [
+      "--log-bin=mysql-bin",
+      "--server-id=1",
+      "--character-set-server=utf8mb4",
+      "--collation-server=utf8mb4_unicode_ci",
+      "--innodb_flush_log_at_trx_commit=1",
+      "--sync_binlog=1"
+      ]
+   restart: always
+   network_mode: host
+  
+  cp-os-dashboard:
+    image: gcr.io/s4-oncsuite-dev-181912/cp-os-dashboard@sha256:f119e377e30a4a2447e4412533ac37384a6e921bda95445d308649a5eb6e86a9
+    depends_on:
+      - docker-mysql
+    ports:
+      - 9090:9090
+    restart: always
+    env_file:
+      - env/dashboard.env
+    network_mode: host
+    
+    cp-os-report:
+    image: gcr.io/s4-oncsuite-dev-181912/cp-os-report@sha256:11d12c18eb67118eb6d122d0e652bde4076adb42f651a667886748a0af5f7467
+    depends_on:
+      - cp-os-dashboard
+    ports:
+      - 9095:9095
+    restart: always
+    env_file:
+      - env/report.env
+    network_mode: host
+
+volumes:
+  mysql-data:
