@@ -37,7 +37,7 @@ services:
       - env/dashboard.env
     network_mode: host
     
-    cp-os-report:
+  cp-os-report:
     image: gcr.io/s4-oncsuite-dev-181912/cp-os-report@sha256:11d12c18eb67118eb6d122d0e652bde4076adb42f651a667886748a0af5f7467
     depends_on:
       - cp-os-dashboard
