@@ -9,6 +9,6 @@ Install docker and docker-compose
 Follow below steps before launching
 
 1)docker-compose down
-3)sudo docker volume ls -qf dangling=true
+2)sudo docker volume ls -qf dangling=true
 3)sudo docker volume rm $(sudo docker volume ls -qf dangling=true)
 4)docker-compose up
