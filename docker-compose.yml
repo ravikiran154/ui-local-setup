@@ -1,4 +1,4 @@
-version: '3'
+version: '2.2'
 services: 
   docker-mysql:
    container_name: mysql
@@ -9,9 +9,10 @@ services:
      - MYSQL_PASSWORD=root
      - MYSQL_PORT=3306
    healthcheck:
-       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
-       timeout: 240s
-       retries: 5
+       test: ["CMD", "/usr/local/bin/mysql-healthcheck.sh"]
+       interval: 60s
+       timeout: 10s
+       retries: 10
    ports:
       - "3306:3306"
    expose:
@@ -19,6 +20,7 @@ services:
    volumes:
       - mysql-data:/var/lib/mysql
       - ./dumps/osdashboard.sql:/docker-entrypoint-initdb.d/osdashboard.sql
+      - ./mysql-healthcheck.sh:/usr/local/bin/mysql-healthcheck.sh
    command: [
       "--log-bin=mysql-bin",
       "--server-id=1",
@@ -32,7 +34,8 @@ services:
   cp-os-dashboard:
     image: gcr.io/s4-oncsuite-dev-181912/cp-os-dashboard@sha256:f119e377e30a4a2447e4412533ac37384a6e921bda95445d308649a5eb6e86a9
     depends_on:
-      - docker-mysql
+      docker-mysql:
+        condition: service_healthy
     ports:
       - 9090:9090
     restart: always
@@ -43,7 +46,8 @@ services:
   cp-os-report:
     image: gcr.io/s4-oncsuite-dev-181912/cp-os-report@sha256:11d12c18eb67118eb6d122d0e652bde4076adb42f651a667886748a0af5f7467
     depends_on:
-      - docker-mysql 
+      docker-mysql:
+        condition: service_healthy
     ports:
       - 9095:9095
     restart: always
