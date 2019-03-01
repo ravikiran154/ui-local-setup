@@ -30,30 +30,21 @@ services:
       "--sync_binlog=1"
       ]
    restart: always
+   network_mode: bridge
   
   cp-os-dashboard:
-    image: gcr.io/s4-oncsuite-dev-181912/cp-os-dashboard@sha256:f119e377e30a4a2447e4412533ac37384a6e921bda95445d308649a5eb6e86a9
+    image: gcr.io/s4-oncsuite-dev-181912/cp-os-dashboard@sha256:76082d0427b043325513ab31a6b5ef58dc2f372d1bb1e246cbcb444d446f1931
     depends_on:
       docker-mysql:
         condition: service_healthy
+    links:
+      - docker-mysql
     ports:
       - 9090:9090
     restart: always
     env_file:
       - env/dashboard.env
-    network_mode: host
-    
-  cp-os-report:
-    image: gcr.io/s4-oncsuite-dev-181912/cp-os-report@sha256:11d12c18eb67118eb6d122d0e652bde4076adb42f651a667886748a0af5f7467
-    depends_on:
-      docker-mysql:
-        condition: service_healthy
-    ports:
-      - 9095:9095
-    restart: always
-    env_file:
-      - env/report.env
-    network_mode: host
+    network_mode: bridge
 
 volumes:
   mysql-data:
