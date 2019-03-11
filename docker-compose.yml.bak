@@ -2,7 +2,7 @@ version: '2.2'
 services: 
   docker-mysql:
    container_name: mysql
-   image: mysql:5.7
+   image: mysql:5.7.20
    environment:
      - MYSQL_ROOT_PASSWORD=root
      - MYSQL_DATABASE=osdashboard
@@ -10,9 +10,9 @@ services:
      - MYSQL_PORT=3306
    healthcheck:
        test: ["CMD", "/usr/local/bin/mysql-healthcheck.sh"]
-       interval: 80s
+       interval: 60s
        timeout: 10s
-       retries: 20
+       retries: 10
    ports:
       - "3306:3306"
    expose:
@@ -30,46 +30,21 @@ services:
       "--sync_binlog=1"
       ]
    restart: always
-   networks:
-        docker_net:
-            ipv4_address: 172.28.1.1
+   network_mode: bridge
   
   cp-os-dashboard:
-    container_name: cp-os-dashboard
-    image: gcr.io/s4-oncsuite-dev-181912/cp-os-dashboard@sha256:3853c6fc4c60049d48b5b23e1c7f673e88f0fcecfba414a98147fb6984d9ef02
+    image: gcr.io/s4-oncsuite-dev-181912/cp-os-dashboard@sha256:76082d0427b043325513ab31a6b5ef58dc2f372d1bb1e246cbcb444d446f1931
     depends_on:
       docker-mysql:
         condition: service_healthy
+    links:
+      - docker-mysql
     ports:
       - 9090:9090
     restart: always
     env_file:
       - env/dashboard.env
-    networks:
-        docker_net:
-            ipv4_address: 172.28.1.2
-
-  cp-os-report:
-    container_name: cp-os-report
-    image: gcr.io/s4-oncsuite-dev-181912/cp-os-report@sha256:c286e71bac7dd1e5ea083db83b96659832c1d1a8fbc5589a205c292baba3a69f
-    depends_on:
-      docker-mysql:
-        condition: service_healthy
-    ports:
-      - 9095:9090
-    restart: always
-    env_file:
-      - env/report.env
-    networks:
-        docker_net:
-            ipv4_address: 172.28.1.3            
-    
-networks:
-    docker_net:
-        ipam:
-            driver: default
-            config:
-                - subnet: 172.28.0.0/16
+    network_mode: bridge
 
 volumes:
   mysql-data:
