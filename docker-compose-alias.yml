@@ -10,7 +10,7 @@ services:
      - MYSQL_PORT=3306
    healthcheck:
        test: ["CMD", "/usr/local/bin/mysql-healthcheck.sh"]
-       interval: 60s
+       interval: 80s
        timeout: 10s
        retries: 20
    ports:
@@ -32,45 +32,44 @@ services:
       ]
    restart: always
    networks:
-        docker_net:
-            ipv4_address: 172.28.1.1
+     backend:
+       aliases: 
+         - db
   
   cp-os-dashboard:
-    container_name: cp-os-dashboard
-    image: gcr.io/s4-oncsuite-dev-181912/cp-os-dashboard@sha256:3853c6fc4c60049d48b5b23e1c7f673e88f0fcecfba414a98147fb6984d9ef02
-    depends_on:
-      docker-mysql:
-        condition: service_healthy
-    ports:
-      - 9090:9090
-    restart: always
-    env_file:
+   container_name: cp-os-dashboard
+   image: gcr.io/s4-oncsuite-dev-181912/cp-os-dashboard@sha256:3853c6fc4c60049d48b5b23e1c7f673e88f0fcecfba414a98147fb6984d9ef02
+   depends_on:
+     docker-mysql:
+       condition: service_healthy
+   ports:
+     - 9090:9090
+   restart: always
+   env_file:
       - env/dashboard.env
-    networks:
-        docker_net:
-            ipv4_address: 172.28.1.2
+   networks:
+     backend:
+       aliases: 
+         - dashboard
 
   cp-os-report:
-    container_name: cp-os-report
-    image: gcr.io/s4-oncsuite-dev-181912/cp-os-report@sha256:ea4b193a6ce8cd104a4c89ad92948ed5cb1df29b261fb4d193e65dbedb26b0c1
-    depends_on:
-      docker-mysql:
-        condition: service_healthy
-    ports:
-      - 9095:9095
-    restart: always
-    env_file:
-      - env/report.env
-    networks:
-        docker_net:
-            ipv4_address: 172.28.1.3            
+   container_name: cp-os-report
+   image: gcr.io/s4-oncsuite-dev-181912/cp-os-report@sha256:ea4b193a6ce8cd104a4c89ad92948ed5cb1df29b261fb4d193e65dbedb26b0c1
+   depends_on:
+     docker-mysql:
+       condition: service_healthy
+   ports:
+     - 9095:9095
+   restart: always
+   env_file:
+     - env/report.env
+   networks:
+     backend:
+       aliases: 
+         - report            
     
 networks:
-    docker_net:
-        ipam:
-            driver: default
-            config:
-                - subnet: 172.28.0.0/16
+  backend:
 
 volumes:
   mysql-data:
