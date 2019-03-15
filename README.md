@@ -15,8 +15,13 @@ finally run "docker container ls" to check if all the services are up and runnin
 To get the latest image, get the SHA id from build step and use it in the docker-compose file
 
 
-LOCAL DB set up instructions:
+UI project configuration:
 
+1. disable redirection to user-service in the router module.
+2. Use static auth token to resolve roles and permissions
+
+
+LOCAL DB set up instructions:
 
 goto gcloud console --> Navigation menu --> storage--> dev_dumps-->download dev dump --> rename it to "osdashboard.sql" and put it in dumps folder
 
