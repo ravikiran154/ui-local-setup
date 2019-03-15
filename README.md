@@ -1,9 +1,24 @@
-h# ui-local-setup(requires Gcloud access)
+# ui-local-setup(requires Gcloud access)
 
 gcloud auth configure-docker
 
 Install docker and docker-compose
 
+Follow below steps before launching
+
+1)docker-compose down
+2)docker-compose -f docker-compose-dev-db.yml up -d
+
+finally run "docker container ls" to check if all the services are up and running
+
+
+To get the latest image, get the SHA id from build step and use it in the docker-compose file
+
+
+LOCAL DB set up instructions:
+
+
+goto gcloud console --> Navigation menu --> storage--> dev_dumps-->download dev dump --> rename it to "osdashboard.sql" and put it in dumps folder
 
 Follow below steps before launching
 
@@ -15,3 +30,9 @@ Follow below steps before launching
 docker inspect --format='{{json .State.Health}}' mysql
 
 verify json until status is changed to healthy and exit code is 0
+
+finally run "docker container ls" to check if all the services are up and running
+
+To get the latest image, get the SHA id from build step and use it in the docker-compose file
+
+

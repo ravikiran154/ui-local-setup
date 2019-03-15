@@ -45,7 +45,7 @@ services:
       - 9090:9090
     restart: always
     env_file:
-      - env/dashboard.env
+      - env/dashboard-local.env
     networks:
         docker_net:
             ipv4_address: 172.28.1.2
@@ -60,7 +60,7 @@ services:
       - 9095:9095
     restart: always
     env_file:
-      - env/report.env
+      - env/report-local.env
     networks:
         docker_net:
             ipv4_address: 172.28.1.3            
