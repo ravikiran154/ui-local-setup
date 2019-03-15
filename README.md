@@ -6,8 +6,8 @@ Install docker and docker-compose
 
 Follow below steps before launching
 
-1)docker-compose down
-2)docker-compose -f docker-compose-dev-db.yml up -d
+1. docker-compose down
+2 .docker-compose -f docker-compose-dev-db.yml up -d
 
 finally run "docker container ls" to check if all the services are up and running
 
@@ -22,10 +22,10 @@ goto gcloud console --> Navigation menu --> storage--> dev_dumps-->download dev 
 
 Follow below steps before launching
 
-1)docker-compose down
-2)sudo docker volume ls -qf dangling=true
-3)sudo docker volume rm $(sudo docker volume ls -qf dangling=true)
-4)docker-compose up
+1. docker-compose down
+2. sudo docker volume ls -qf dangling=true
+3. sudo docker volume rm $(sudo docker volume ls -qf dangling=true)
+4. docker-compose up
 
 docker inspect --format='{{json .State.Health}}' mysql
 
